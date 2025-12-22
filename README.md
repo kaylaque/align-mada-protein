@@ -26,3 +26,12 @@
 1. Gathering parameter using BioPython (net charge, extinction coeff.) and pH optimum prediction (model inference)
 2. Kinetic modelling approach
 3. Scoring activity and Coefficient of kinetic modelling
+
+---------------------------------------------------------------------
+TASK BREAKDOWN: (from the easiest to some hassle)
+- Code for parameter gathering (biopython, pyrosetta, external model)
+    - run through wildtype and mutants
+    - data analysis check
+- Docking
+- Structure data gathering
+- Kinetic modelling

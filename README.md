@@ -78,7 +78,11 @@ If no errors appear, your environment is ready.
 * For large datasets, ESM scoring may take longer on CPU
 * GPU users can create a separate environment if desired
 
-## Nimbus Approach Replication
+## Prediction of Kcat and Km
+
+Product: Terephtalic acid: C1=CC(=CC=C1C(=O)O)C(=O)O
+
+# Nimbus Approach Replication
 1. Structure Data Gathering
 * Tools: ColabFold/AlphaFold2, ESMFold, or AlphaFold DB, Benchling API
 * Object: mutant sequences structures, target enzyme structure
@@ -107,7 +111,7 @@ If no errors appear, your environment is ready.
 
 ---------------------------------------------------------------------
 TASK BREAKDOWN: (from the easiest to some hassle)
-- Code for parameter gathering (biopython, pyrosetta, external model)
+- [DONE] Code for parameter gathering (biopython, pyrosetta, external model)
     - run through wildtype and mutants
     - data analysis check
 - Docking

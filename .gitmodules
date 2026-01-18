@@ -1,0 +1,6 @@
+[submodule "function/CatOpt"]
+	path = function/CatOpt
+	url = https://github.com/SizheQiu/CatOpt.git
+[submodule "function/UniKP"]
+	path = function/UniKP
+	url = https://github.com/Luo-SynBioLab/UniKP

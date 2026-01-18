@@ -1,3 +1,9 @@
+# Documents based
+functions/CatOpt/*
+functions/CatOpt/**
+functions/UniKP/*
+functions/UniKP/**
+*.DS_Store
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

@@ -1,12 +1,12 @@
 # personal need based
-functions/CatOpt/*
-functions/CatOpt/**
-functions/UniKP/*
-functions/UniKP/**
+function/CatOpt/*
+function/CatOpt/**
+function/UniKP/*
+function/UniKP/**
 *.DS_Store
 
-!functions/CatOpt/.gitkeep
-!functions/UniKP/.gitkeep
+!function/CatOpt/.gitkeep
+!function/UniKP/.gitkeep
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

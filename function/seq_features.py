@@ -35,7 +35,7 @@ def all_params(sequence: str, params):
     # epsilon_protein = protein.molar_extinction_coefficient()
     # seq_params['extinction_coeff_cys'] = epsilon_protein[0] # reduced cysteines
     # seq_params['extinction_coeff_dis'] = epsilon_protein[1] # disulfid bridges
-    seq_params['pg_fraction'] = pro_gly_fraction(sequence)
+    seq_params['PG_fraction'] = pro_gly_fraction(sequence)
 
     if params is None or len(params)==0:
         return(seq_params)

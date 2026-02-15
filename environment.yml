@@ -6,7 +6,6 @@ dependencies:
   - pip
   - pip:
       - biopython==1.86
-      - esm==3.2.3
       - fair-esm==2.0.0
       - numpy==2.1.2
       - pandas==2.3.3

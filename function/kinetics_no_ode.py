@@ -5,7 +5,7 @@ python kinetics_no_ode.py \
   --output v0_out.csv \
   --PET0 1.0 \
   --E_mg_per_mL 1.0 \
-  --MW_kDa 30 \ 
+  --MW_kDa 30 \
   --volume_mL 1.0 \
   --kcat_unit per_s \
   --conc_unit mM
@@ -22,7 +22,7 @@ def mgml_to_molar(E_mg_per_mL: float, MW_kDa: float) -> float:
     MW_kDa: kDa (1 kDa = 1000 g/mol)
     """
     E_g_per_L = E_mg_per_mL
-    MW_g_per_mol = MW_kDa * 1000.0 # change to Dalton as input
+    MW_g_per_mol = MW_kDa * 1000.0
     return E_g_per_L / MW_g_per_mol
 
 def v0_mm(kcat_per_min: float, Km: float, S0: float, E_molar: float) -> float:

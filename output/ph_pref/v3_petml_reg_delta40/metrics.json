@@ -1,0 +1,8 @@
+{
+  "n_samples": 55,
+  "target": "activity_40C",
+  "cv_mae_mean": 23.284141645072815,
+  "cv_mae_std": 15.43029644090932,
+  "cv_rmse_mean": 35.750622380286096,
+  "cv_rmse_std": 33.172530488074315
+}

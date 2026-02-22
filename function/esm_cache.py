@@ -3,7 +3,7 @@ import os
 import numpy as np
 import pandas as pd
 from typing import Dict
-from esm_scoring import esm_log_likelihood
+from function.esm_scoring import esm_log_likelihood
 
 CACHE_PATH = "esm_ll_cache.npz"
 

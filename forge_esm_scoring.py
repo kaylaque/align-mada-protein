@@ -62,23 +62,53 @@ class ForgeESMEmbedder:
 
     def embed_one(self, seq: str) -> np.ndarray:
         path = self._cache_path(seq)
+
+        # robust cache load: handle partial/corrupt files
         if os.path.exists(path):
-            return np.load(path)["emb"]
+            try:
+                return np.load(path)["emb"]
+            except Exception:
+                try:
+                    os.remove(path)
+                except OSError:
+                    pass
 
         protein = ESMProtein(sequence=str(seq))
+
+        # IMPORTANT: tmp must end with ".npz" (otherwise numpy adds ".npz" automatically)
+        tmp = path + ".tmp.npz"
+
         for attempt in range(1, self.max_retries + 1):
             try:
                 pt = self.client.encode(protein)
                 out = self.client.logits(pt, EMBED_CFG)
-                emb = _to_np_fp32(out.embeddings)
-                np.savez_compressed(path, emb=emb)
+
+                emb_t = out.embeddings
+                if isinstance(emb_t, torch.Tensor):
+                    emb = emb_t.detach().to(torch.float32).cpu().numpy()
+                else:
+                    # use as_tensor to avoid the torch.tensor(tensor) warning
+                    emb = torch.as_tensor(emb_t).detach().to(torch.float32).cpu().numpy()
+
+                # atomic write
+                np.savez_compressed(tmp, emb=emb)
+                os.replace(tmp, path)
                 return emb
+
             except Exception:
+                # clean tmp if exists (avoid leaving junk)
+                try:
+                    if os.path.exists(tmp):
+                        os.remove(tmp)
+                except OSError:
+                    pass
+
                 if attempt == self.max_retries:
                     raise
                 time.sleep(self.backoff_sec * attempt)
 
         raise RuntimeError("unreachable")
+
 
     def embed_many(self, seqs: List[str]) -> Dict[str, np.ndarray]:
         """

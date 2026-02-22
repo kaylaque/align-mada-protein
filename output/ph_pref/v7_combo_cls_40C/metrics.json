@@ -1,0 +1,10 @@
+{
+  "n_samples": 55,
+  "target": "activity_40C",
+  "cv_accuracy_mean": 0.509090909090909,
+  "cv_accuracy_std": 0.18719327529067276,
+  "cv_auc_mean": 0.5571428571428572,
+  "cv_auc_std": 0.2274376643312681,
+  "class_balance_y1": 0.43636363636363634,
+  "n_features": 29
+}

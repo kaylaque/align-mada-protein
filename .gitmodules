@@ -4,3 +4,6 @@
 [submodule "function/UniKP"]
 	path = function/UniKP
 	url = https://github.com/Luo-SynBioLab/UniKP
+[submodule "external_models/PETML"]
+	path = external_models/PETML
+	url = https://github.com/jafetgado/PETML.git

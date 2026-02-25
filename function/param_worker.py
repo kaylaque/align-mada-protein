@@ -286,7 +286,7 @@ class ParallelPipeline:
         print("="*60)
         
         with ThreadPoolExecutor(max_workers=2) as executor:
-            ph_future = executor.submit(compute_ph_optimum_pred, csv)
+            ph_future = executor.submit(compute_ph_optimum_pred, csv_path)
             kcat_future = executor.submit(compute_kcat_km, df_props, col_seq, kcat_km_out)
             
             # Wait for completion

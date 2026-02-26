@@ -2,10 +2,7 @@ import pickle
 import numpy as np
 import pandas as pd
 import argparse
-# !git clone https://github.com/Luo-SynBioLab/UniKP
- 
-#  !pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu113
-#  !pip install -r requirements.txt   
+c
 from huggingface_hub import snapshot_download, hf_hub_download
 import os
 

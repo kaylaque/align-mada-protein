@@ -3,6 +3,7 @@ import torch, os
 from typing import List
 import numpy as np
 from esm import pretrained
+token = os.environ["ESM_API_KEY"]
 
 # Get available CPU cores (respects container limits like Docker/Kubernetes)
 try:

@@ -631,15 +631,15 @@ if __name__ == "__main__":
         n_jobs=-1,
         esm_model="esmc-6b-2024-12",
         esm_cache_dir="cache_forge_esmc",
-        rebuild_wt_map=False,  # set True if your sequences or clusters changed
+        rebuild_wt_map=True,  # set True if your sequences or clusters changed
     )
 
     results = pipeline.run_all(
-        csv_path="sequence.csv",
-        wildtype_csv="dataset/pet-2025-wildtype-cds.csv",
-        mutation_csv="mutations.csv",
-        clusters_csv="backbone_clusters.csv",
-        seq_to_wt_csv="sequence_to_wt.csv",
-        cluster_to_wt_csv="cluster_to_wt.csv",
-        col_seq="sequence",
+        csv_path="dataset/external_petase_expression.csv",
+        wildtype_csv="dataset/capetase-wildtype.csv",
+        mutation_csv="dataset/external_petase_expression.csv",
+        # clusters_csv="backbone_clusters.csv",
+        # seq_to_wt_csv="sequence_to_wt.csv",
+        # cluster_to_wt_csv="cluster_to_wt.csv",
+        col_seq="seq_aa"
     )

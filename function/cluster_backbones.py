@@ -11,7 +11,7 @@ Process:
 - input: sequence
 - process: encoding using k-mer hashing, unsupervised clustering using mini batch k-means
 """
-
+import gc
 import argparse
 import numpy as np
 import pandas as pd
@@ -101,22 +101,22 @@ def cluster_group(seqs, random_state=42, kmer_k=3, dim=2**16):
     return labels, reps
 
 
-def main(input_csv: str, out_clusters: str, out_reps: str, kmer_k: int):
-    df = pd.read_csv(input_csv)
-    if "sequence" not in df.columns:
+def main(input_csv: str, out_clusters: str, out_reps: str, kmer_k: int, sequence_col: str):
+    df = pd.read_csv(input_csv, low_memory=False)
+    if sequence_col not in df.columns:
         raise ValueError("Input CSV must contain a 'sequence' column")
 
     # Basic clean
-    df["sequence"] = df["sequence"].astype(str).str.strip()
-    df = df[df["sequence"].str.len() > 0].copy()
+    df[sequence_col] = df[sequence_col].astype(str).str.strip()
+    df = df[df[sequence_col].str.len() > 0].copy()
 
     # Group by length first (very important for your dataset)
-    df["seq_len"] = df["sequence"].str.len()
+    df["seq_len"] = df[sequence_col].str.len()
     length_counts = df["seq_len"].value_counts().to_dict()
 
     # We'll cluster only large groups; small groups get their own clusters.
     # You can tune threshold.
-    BIG_GROUP_THRESHOLD = 50
+    BIG_GROUP_THRESHOLD = 100
 
     global_cluster_id = 0
     cluster_ids = np.full(len(df), -1, dtype=int)
@@ -126,7 +126,7 @@ def main(input_csv: str, out_clusters: str, out_reps: str, kmer_k: int):
         sub_idx = list(sub_idx)
         n = len(sub_idx)
 
-        seqs = df.loc[sub_idx, "sequence"].tolist()
+        seqs = df.loc[sub_idx, sequence_col].tolist()
 
         if n < BIG_GROUP_THRESHOLD:
             # Each sequence gets its own cluster (or put all small ones into one bucket)
@@ -136,7 +136,7 @@ def main(input_csv: str, out_clusters: str, out_reps: str, kmer_k: int):
                     "cluster_id": global_cluster_id,
                     "seq_len": int(L),
                     "cluster_size": 1,
-                    "rep_sequence": df.loc[row_i, "sequence"],
+                    "rep_sequence": df.loc[row_i, sequence_col],
                     "avg_sim_to_center": 1.0,
                 })
                 global_cluster_id += 1
@@ -163,7 +163,11 @@ def main(input_csv: str, out_clusters: str, out_reps: str, kmer_k: int):
 
         print(f"[len={L}] n={n} -> clusters={len(local_to_global)}")
 
-    df_out = df[["sequence", "seq_len"]].copy()
+        del seqs, labels, reps, local_to_global
+        gc.collect()
+
+    df_out = df[[sequence_col, "seq_len"]].copy()
+    df_out = df_out.rename(columns={sequence_col: "sequence"})
     df_out["cluster_id"] = cluster_ids
 
     df_out.to_csv(out_clusters, index=False)
@@ -183,5 +187,6 @@ if __name__ == "__main__":
     ap.add_argument("--out-clusters", default="backbone_clusters.csv")
     ap.add_argument("--out-reps", default="cluster_representatives.csv")
     ap.add_argument("--kmer-k", type=int, default=3, help="k-mer size (3 recommended)")
+    ap.add_argument("--seq-col", type=str, default='sequence', help="column name for sequence column")
     args = ap.parse_args()
-    main(args.input, args.out_clusters, args.out_reps, args.kmer_k)
+    main(args.input, args.out_clusters, args.out_reps, args.kmer_k, sequence_col = args.seq_col)

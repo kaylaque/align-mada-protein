@@ -1,0 +1,16 @@
+{
+  "TEMP": 40,
+  "TARGET": "umol_product_per_mg_enzyme",
+  "n_rows": 1916,
+  "n_unique_proteins": 214,
+  "cv_spearman_mean": 0.3327239496312556,
+  "cv_spearman_std": 0.1815151001862467,
+  "features": [
+    "Supervised",
+    "Active_site_HMM",
+    "PET_HMM",
+    "Homologs_HMM",
+    "Blosum",
+    "pH"
+  ]
+}

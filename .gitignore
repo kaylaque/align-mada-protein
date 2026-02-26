@@ -4,7 +4,7 @@ function/CatOpt/**
 function/UniKP/*
 function/UniKP/**
 *.DS_Store
-
+.env
 !function/CatOpt/.gitkeep
 !function/UniKP/.gitkeep
 # Byte-compiled / optimized / DLL files

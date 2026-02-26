@@ -633,13 +633,15 @@ if __name__ == "__main__":
         esm_cache_dir="cache_forge_esmc",
         rebuild_wt_map=True,  # set True if your sequences or clusters changed
     )
+    PATH = '/Users/macbookpro/Documents/ALIGN/code/align-mada-protein/'
 
     results = pipeline.run_all(
-        csv_path="dataset/external_petase_expression.csv",
-        wildtype_csv="dataset/capetase-wildtype.csv",
-        mutation_csv="dataset/external_petase_expression.csv",
-        # clusters_csv="backbone_clusters.csv",
+        csv_path=PATH + "dataset/external_petase_expression.csv",
+        wildtype_csv=PATH + "dataset/capetase-wildtype.csv",
+        mutation_csv=PATH + "dataset/external_petase_expression.csv",
+        clusters_csv=PATH + "output/backbone_clusters.csv",
         # seq_to_wt_csv="sequence_to_wt.csv",
         # cluster_to_wt_csv="cluster_to_wt.csv",
-        col_seq="seq_aa"
+        col_seq="seq_aa",
+
     )

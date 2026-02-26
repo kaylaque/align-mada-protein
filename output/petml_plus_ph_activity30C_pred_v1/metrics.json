@@ -1,0 +1,17 @@
+{
+  "TARGET": "activity_30C_predicted",
+  "USE_TM": true,
+  "n_rows": 609,
+  "n_unique_proteins": 152,
+  "cv_spearman_mean": 0.38134427628394524,
+  "cv_spearman_std": 0.1169607155457297,
+  "features": [
+    "Supervised",
+    "Active_site_HMM",
+    "PET_HMM",
+    "Homologs_HMM",
+    "Blosum",
+    "pH",
+    "Tm"
+  ]
+}

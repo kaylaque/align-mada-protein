@@ -1,6 +1,6 @@
 # main_zero_shot_cluster.py (V2)
 import pandas as pd
-from scoring_cluster import compute_property_scores_clusteraware_v2
+from function.scoring_cluster import compute_property_scores_clusteraware_v2
 
 ACT1_COL = "activity_1 (μmol [TPA]/min·mg [E])"
 ACT2_COL = "activity_2 (μmol [TPA]/min·mg [E])"

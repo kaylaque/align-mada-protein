@@ -291,7 +291,18 @@ def compute_esm_delta_embeddings(
 
     return df
 
+def compute_esm_delta_embeddings(df: pd.DataFrame,
+    col_seq: str = "sequence",
+    col_wt: str = "wt_sequence",
+    esm_model: str = "esmc-6b-2024-12",
+    esm_cache_dir: str = "cache_forge_esmc"):
+    df_emb = pd.read_csv('/Users/macbookpro/Documents/ALIGN/code/align-mada-protein/delta_forge_vs_wt.csv')
 
+    df = df.copy()
+    df["wt_cosine_sim"] = df_emb['wt_cosine_sim']
+    df["delta_emb"]     = df_emb['delta_emb']
+
+    return df
 # ==============================================================================
 # MOTIF / AGGREGATION FEATURE BATCHES (unchanged)
 # ==============================================================================
@@ -392,7 +403,7 @@ def compute_properties(
     # ── 3. Biophysical features ─────────────────────────────────────────────
     print("\n[3/6] Computing biophysical features...")
     seqs = df[col_seq].tolist()
-
+    
     with ThreadPoolExecutor(max_workers=n_jobs) as executor:
         protein_params = list(tqdm(
             executor.map(all_params, seqs),
@@ -479,11 +490,11 @@ def compute_properties(
 # ALIGNMENT / pH / KINETICS
 # ==============================================================================
 
-def alignment_blossum(wildtype: str, mutation: str, output: str, n_jobs: int = -1):
+def alignment_blossum(wildtype: str, mutation: str, output: str, n_jobs: int = -1, seq_col: str = 'sequence'):
     if n_jobs == -1:
         n_jobs = mp.cpu_count()
     print(f"Running BLOSUM alignment with {n_jobs} cores...")
-    blossum_align(wildtype, mutation, n_jobs, "loky", output)
+    blossum_align(wildtype, mutation, n_jobs, "loky", output, seq_col = seq_col)
     print("BLOSUM alignment complete!")
 
 
@@ -598,17 +609,17 @@ class ParallelPipeline:
         print("\n" + "=" * 60)
         print("STEP 2: Running BLOSUM alignment")
         print("=" * 60)
-        alignment_blossum(wildtype_csv, mutation_csv, alignment_out, n_jobs=self.n_jobs)
+        alignment_blossum(wildtype_csv, mutation_csv, alignment_out, n_jobs=self.n_jobs, seq_col = col_seq)
 
         # ── STEP 3+4: pH + kcat/km ─────────────────────────────────────────
         print("\n" + "=" * 60)
         print("STEP 3 & 4: pH optimum + kinetic predictions (parallel)")
         print("=" * 60)
-        with ThreadPoolExecutor(max_workers=2) as executor:
-            ph_future   = executor.submit(compute_ph_optimum_pred, csv_path)
-            kcat_future = executor.submit(compute_kcat_km, df_props, col_seq, kcat_km_out)
-            ph_future.result()
-            kcat_future.result()
+        # with ThreadPoolExecutor(max_workers=2) as executor:
+        #     ph_future   = executor.submit(compute_ph_optimum_pred, csv_path)
+        #     kcat_future = executor.submit(compute_kcat_km, df_props, col_seq, kcat_km_out)
+        #     ph_future.result()
+        #     kcat_future.result()
 
         elapsed = time.time() - start_time
         print("\n" + "=" * 60)
@@ -636,12 +647,14 @@ if __name__ == "__main__":
     PATH = '/Users/macbookpro/Documents/ALIGN/code/align-mada-protein/'
 
     results = pipeline.run_all(
-        csv_path=PATH + "dataset/external_petase_expression.csv",
-        wildtype_csv=PATH + "dataset/capetase-wildtype.csv",
-        mutation_csv=PATH + "dataset/external_petase_expression.csv",
-        clusters_csv=PATH + "output/backbone_clusters.csv",
-        # seq_to_wt_csv="sequence_to_wt.csv",
-        # cluster_to_wt_csv="cluster_to_wt.csv",
-        col_seq="seq_aa",
+        csv_path=PATH + "dataset/predictive-pet-zero-shot-test-2025.csv",
+        wildtype_csv=PATH + "dataset/pet-2025-wildtype-cds.csv",
+        mutation_csv=PATH + "dataset/predictive-pet-zero-shot-test-2025.csv",
+        clusters_csv=PATH + "output/zero/backbone_clusters.csv",
+        seq_to_wt_csv=PATH +"output/zero_2/sequence_to_wt.csv",
+        cluster_to_wt_csv=PATH +"output/zero_2/cluster_to_wt.csv",
+        # col_seq="seq_aa",
+        properties_out = PATH +"output/zero_2/sequences_raw_properties.csv",
+        alignment_out = PATH +"output/zero_2/alignment_results.csv",
 
     )

@@ -44,18 +44,18 @@ def find_best_match(mutated_seq, wildtype_list):
     return best_match, best_score, seq_align, seq_mutation_rate
 
 
-def main_process(wildtype, mutation, n_jobs, backend, output):
+def main_process(wildtype, mutation, n_jobs, backend, output, seq_col):
         print("BLOSSUM62 ALIGNMENT: Loading data...")
         wd_df = pd.read_csv(wildtype)
         mt_df = pd.read_csv(mutation)
         
         if 'Wt AA Sequence' not in wd_df.columns:
             raise ValueError("Wildtype CSV must contain 'Wt AA Sequence' column")
-        if 'sequence' not in mt_df.columns:
+        if seq_col not in mt_df.columns:
             raise ValueError("Mutation CSV must contain 'sequence' column")
 
         wd_seq = wd_df['Wt AA Sequence'].tolist()
-        mt_seqs = mt_df['sequence'].tolist()
+        mt_seqs = mt_df[seq_col].tolist()
 
         print(f"Processing {len(mt_seqs)} mutated sequences against {len(wd_seq)} wildtypes...")
 

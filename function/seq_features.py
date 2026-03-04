@@ -3,6 +3,44 @@ import numpy as np
 from Bio.SeqUtils.IsoelectricPoint import IsoelectricPoint as IP
 from Bio.SeqUtils.ProtParam import ProteinAnalysis
 
+# Valid unambiguous amino acid letters accepted by Biopython
+VALID_AA = set("ACDEFGHIKLMNPQRSTVWY")
+
+def clean_sequence(seq: str) -> str:
+    """
+    Remove or replace ambiguous/invalid amino acid characters.
+    
+    X  → removed (unknown AA — Biopython rejects it)
+    B  → N  (Asn or Asp → default to Asn)
+    Z  → Q  (Gln or Glu → default to Gln)  
+    U  → C  (Selenocysteine → closest is Cys)
+    O  → K  (Pyrrolysine → closest is Lys)
+    J  → L  (Leu or Ile → default to Leu)
+    *  → removed (stop codon bleed)
+    -  → removed (gap character)
+    anything else non-standard → removed
+    """
+    replacements = {
+        'B': 'N',
+        'Z': 'Q',
+        'U': 'C',
+        'O': 'K',
+        'J': 'L',
+    }
+    remove = {'X', '*', '-', ' '}
+    
+    cleaned = []
+    for ch in seq.upper():
+        if ch in VALID_AA:
+            cleaned.append(ch)
+        elif ch in replacements:
+            cleaned.append(replacements[ch])
+        elif ch in remove:
+            continue   # drop it
+        # else: silently drop any other weird character
+    
+    return "".join(cleaned)
+
 def net_charge(seq: str, pH: float) -> float:
     seq = seq.strip()
     if not seq:
@@ -21,17 +59,18 @@ def pro_gly_fraction(seq: str) -> float:
     c = sum(1 for a in seq if a in ("P", "G"))
     return c / len(seq)
 
-def all_params(sequence: str, params):
+def all_params(sequence: str, params = None):
     seq_params = dict()
-    protein = IP(sequence)
+    seq_clean = clean_sequence(str(sequence).strip()) 
+    protein = IP(seq_clean)
     seq_params['IEP'] = protein.pi()
     seq_params['charge7'] = protein.charge_at_pH(7.4)
     seq_params['charge9'] = protein.charge_at_pH(9.0)
     seq_params['charge55'] = protein.charge_at_pH(5.5)
-    seq_params = ProteinAnalysis(sequence)
-    seq_params['molecular_weight'] = protein.molecular_weight()
-    seq_params['instability_index'] = protein.instability_index()
-    seq_params['hydrophobicity'] = protein.gravy(scale='KyteDoolitle') #GRAVY (Grand Average of Hydropathy) according to Kyte and Doolitle, 1982.
+    seq_analysis = ProteinAnalysis(seq_clean)
+    seq_params['molecular_weight'] = seq_analysis.molecular_weight()
+    seq_params['instability_index'] = seq_analysis.instability_index()
+    seq_params['hydrophobicity'] = seq_analysis.gravy(scale='KyteDoolitle') #GRAVY (Grand Average of Hydropathy) according to Kyte and Doolitle, 1982.
     # epsilon_protein = protein.molar_extinction_coefficient()
     # seq_params['extinction_coeff_cys'] = epsilon_protein[0] # reduced cysteines
     # seq_params['extinction_coeff_dis'] = epsilon_protein[1] # disulfid bridges

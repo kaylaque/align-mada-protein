@@ -93,3 +93,33 @@ If no errors appear, your environment is ready.
 * For large datasets, ESM scoring may take longer on CPU
 * GPU users can create a separate environment if desired
 
+## Author Contributions
+
+This project was developed collaboratively by a team from Universitas 
+Gadjah Mada, in collaboration with Tokyo Institute of Technology 
+(Melodia Rezadhini).
+
+**Kayla Queenazima** (UGM) — 
+Conceptualised the weighted scoring framework integrating multiple 
+biological parameters; designed the overall pipeline architecture 
+combining ESM embeddings, BLOSUM alignment scoring, and kcat/Km 
+prediction; managed submission workflow and final parameter tuning.
+
+**Sofyan Maulana** (UGM) — 
+Implemented ESM zero-shot scoring module (forge integration) for 
+PETase sequence embedding generation; developed delta-score analysis 
+comparing engineered variants against wild-type.
+
+**Farrel Alfaza, Nayaka Bagus** (UGM), **Melodia Rezadhini** (Tokyo Institute of Technology) — 
+Data curation and pre-processing of PETase sequence datasets; biological validation of computational predictions; cross-checking of scoring outputs against known enzymatic behaviour and structural constraints; experimental context interpretation; External validation; biological plausibility assessment of predicted sequences from a protein engineering perspective; advisory input on PETase enzymatic mechanism and structural-functional relationships.
+
+## Context
+
+This work was developed as a submission to the **alignBio PETase Protein 
+Engineering Tournament** (https://alignbio.org/benchmarks/) — a community 
+benchmark for ML-based prediction of PETase enzyme variants. The pipeline 
+combines ESM protein language models with weighted feature scoring to 
+predict expression and activity of engineered PETase sequences. 
+
+Note: As of writing, the benchmark organisers have not announced the 
+tournament results.
